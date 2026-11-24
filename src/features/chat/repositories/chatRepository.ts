@@ -319,9 +319,13 @@ export const chatRepository = {
     const userId = await currentUserId()
     const { count, error } = await getSupabase()
       .from('messages')
-      .select('id', { count: 'exact', head: true })
+      // GET com limit(0), não HEAD: requisição HEAD ficava pendurada no navegador ao recarregar a
+      // página e travava a fila de auth do supabase-js — Home/Chat/Conta do aluno nunca saíam do
+      // "Carregando…". A contagem continua vindo do header Content-Range.
+      .select('id', { count: 'exact' })
       .is('read_at', null)
       .neq('sender_id', userId)
+      .limit(0)
     if (error) throw error
     return count ?? 0
   },
