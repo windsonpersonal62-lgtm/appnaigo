@@ -43,16 +43,21 @@
     z-index: -1;
     pointer-events: none;
     background:
-      radial-gradient(55rem 55rem at 8% -12%, rgba(203, 198, 184, 0.07), transparent 62%),
-      radial-gradient(48rem 48rem at 104% 4%, rgba(156, 175, 124, 0.05), transparent 58%),
-      radial-gradient(40rem 40rem at 46% 112%, rgba(242, 202, 80, 0.035), transparent 60%);
+      radial-gradient(40rem 32rem at 10% -10%, rgba(198, 244, 50, 0.10), transparent 60%),
+      radial-gradient(36rem 30rem at 110% 8%, rgba(100, 210, 255, 0.07), transparent 60%),
+      radial-gradient(40rem 40rem at 50% 115%, rgba(198, 244, 50, 0.05), transparent 60%);
   }
 
   /* Tracking específico por tamanho: títulos grandes pedem tracking negativo,
    * texto corrido fica perto de zero. Ver docs/DESIGN_SYSTEM.md. */
   h1,
   h2 {
-    letter-spacing: -0.021em;
+    letter-spacing: -0.028em;
+  }
+
+  /* Números tabulares em todo o app: métricas, horários e cargas alinham na vertical. */
+  body {
+    font-feature-settings: 'tnum' 1;
   }
 
   h3,
@@ -70,6 +75,14 @@
 }
 
 @layer utilities {
+  /** Botão primário: lima com leve volume (luz no topo), como os CTAs do Apple Fitness. */
+  .cta-gradient {
+    background-image: linear-gradient(180deg, #d4ff5a 0%, #b4e824 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.45),
+      0 6px 20px -6px rgba(198, 244, 50, 0.55);
+  }
+
   /**
    * Materiais translúcidos.
    *
@@ -112,7 +125,7 @@
     inset: 100% 0 auto 0;
     height: 1.25rem;
     pointer-events: none;
-    background: linear-gradient(to bottom, rgba(20, 19, 18, 0.5), transparent);
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), transparent);
   }
 
   .scroll-edge-bottom::before {
@@ -121,7 +134,7 @@
     inset: auto 0 100% 0;
     height: 1.25rem;
     pointer-events: none;
-    background: linear-gradient(to top, rgba(20, 19, 18, 0.5), transparent);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.55), transparent);
   }
 
   /**
@@ -145,7 +158,7 @@
     transition: opacity 260ms var(--ease-out-quint);
     background: radial-gradient(
       16rem 16rem at var(--spot-x, 50%) var(--spot-y, 50%),
-      rgba(203, 198, 184, 0.11),
+      rgba(198, 244, 50, 0.10),
       transparent 68%
     );
   }
@@ -172,7 +185,7 @@
   }
 
   .atmospheric-overlay {
-    background: radial-gradient(circle, transparent 20%, rgba(20, 19, 18, 0.9) 100%);
+    background: radial-gradient(circle, transparent 20%, rgba(0, 0, 0, 0.9) 100%);
   }
 }
 

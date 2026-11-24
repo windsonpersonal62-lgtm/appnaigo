@@ -18,7 +18,7 @@ export function BottomNavigation({ items }: BottomNavigationProps) {
   return (
     <nav
       aria-label="Navegação principal"
-      className="glass-chrome safe-area-bottom scroll-edge-bottom fixed bottom-0 left-0 z-40 flex w-full items-center justify-around px-2 py-3 md:hidden"
+      className="glass-chrome fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-40 flex items-center justify-between gap-1 rounded-[1.75rem] p-1.5 shadow-glass-lg ring-1 ring-white/10 md:hidden"
     >
       {items.map((item) => (
         <NavLink
@@ -31,8 +31,10 @@ export function BottomNavigation({ items }: BottomNavigationProps) {
               : undefined
           }
           className={({ isActive }) =>
-            `flex min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-md px-2 py-1 transition-[color,transform] duration-200 ease-out-quint active:scale-95 ${
-              isActive ? 'text-action-primary' : 'text-text-secondary'
+            // Tab bar flutuante: só o item ativo mostra o rótulo, dentro de uma cápsula lima — com
+            // 7 abas no aluno, rótulo em todas virava texto truncado de 40px.
+            `flex h-12 min-w-0 items-center justify-center gap-1.5 rounded-full transition-[background-color,color,flex-grow] duration-300 ease-out-quint active:scale-95 ${
+              isActive ? 'flex-[2.4] bg-action-primary px-3 text-action-primary-foreground' : 'flex-1 text-text-secondary'
             }`
           }
         >
@@ -41,12 +43,6 @@ export function BottomNavigation({ items }: BottomNavigationProps) {
               {/* O ponto marca o item ativo sem depender só de cor. */}
               <span className="relative">
                 <Icon name={item.icon} filled={isActive} />
-                {isActive && (
-                  <span
-                    aria-hidden="true"
-                    className="absolute -bottom-0.5 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-action-primary"
-                  />
-                )}
                 {item.badgeCount !== undefined && item.badgeCount > 0 && (
                   <span
                     // O número também vai no aria-label do NavLink: quem usa leitor de tela não
@@ -58,7 +54,7 @@ export function BottomNavigation({ items }: BottomNavigationProps) {
                   </span>
                 )}
               </span>
-              <span className="truncate text-[11px] font-medium">{item.label}</span>
+              <span className={isActive ? 'truncate text-[13px] font-semibold' : 'sr-only'}>{item.label}</span>
             </>
           )}
         </NavLink>

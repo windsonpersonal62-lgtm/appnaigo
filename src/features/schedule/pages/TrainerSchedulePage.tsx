@@ -133,7 +133,8 @@ export function TrainerSchedulePage() {
   }
 
   const set = (patch: Partial<FormState>) => setForm((f) => (f ? { ...f, ...patch } : f))
-  const monthLabel = weekStart.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })
+  const monthRaw = weekStart.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })
+  const monthLabel = monthRaw.charAt(0).toUpperCase() + monthRaw.slice(1)
 
   return (
     <div className="mx-auto max-w-container-max px-margin-mobile py-8 md:px-margin-desktop">
@@ -155,7 +156,7 @@ export function TrainerSchedulePage() {
             <Icon name="chevron_left" />
           </button>
           <div className="text-center">
-            <p className="font-display text-base font-semibold capitalize text-text-primary">{monthLabel}</p>
+            <p className="font-display text-base font-semibold text-text-primary">{monthLabel}</p>
             <button type="button" className="text-xs font-medium text-action-primary" onClick={() => setSelected(new Date())}>
               Hoje
             </button>

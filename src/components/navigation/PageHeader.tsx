@@ -11,12 +11,12 @@ export function PageHeader({ eyebrow, title, description, actions }: PageHeaderP
   return (
     <div className="mb-8 flex flex-col gap-2">
       {eyebrow && (
-        <span className="text-sm font-semibold uppercase tracking-wide text-action-primary">
+        <span className="text-xs font-semibold uppercase tracking-[0.14em] text-action-primary">
           {eyebrow}
         </span>
       )}
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <h2 className="font-display text-3xl font-extrabold tracking-tight text-text-primary">
+        <h2 className="font-display text-[2.125rem] font-bold leading-[1.1] tracking-tight text-text-primary">
           {title}
         </h2>
         {actions}

@@ -32,7 +32,7 @@ export function RoleShell({ navItems, sidebarSubtitle, switchTo }: RoleShellProp
         desfocar — o material só existe quando o conteúdo passa por baixo dele.
       */}
       <div className="flex flex-1 flex-col overflow-hidden">
-        <main className="flex-1 overflow-y-auto pb-24 md:pb-0">
+        <main className="flex-1 overflow-y-auto pb-28 md:pb-0">
           <TopBar
             title="Windson Wood Personal"
             actions={
