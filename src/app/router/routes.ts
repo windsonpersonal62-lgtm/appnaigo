@@ -31,6 +31,7 @@ export const ROUTES = {
     newWorkout: '/personal/treinos/novo',
     studentWorkoutBuilder: '/personal/alunos/:studentId/treino',
     chat: '/personal/chat',
+    schedule: '/personal/agenda',
     account: '/personal/conta',
   },
 } as const

@@ -29,6 +29,7 @@ import { WorkoutBuilderPage } from '@/features/workouts/pages/WorkoutBuilderPage
 import { NutritionPlanPage } from '@/features/nutrition/pages/NutritionPlanPage'
 import { BillingPage } from '@/features/billing/pages/BillingPage'
 import { ChatPage } from '@/features/chat/pages/ChatPage'
+import { TrainerSchedulePage } from '@/features/schedule/pages/TrainerSchedulePage'
 import { TrainerInboxPage } from '@/features/chat/pages/TrainerInboxPage'
 import { ROUTES } from './routes'
 
@@ -79,6 +80,7 @@ export const router = createBrowserRouter([
       { path: ROUTES.trainer.newWorkout, element: <WorkoutBuilderPage /> },
       { path: ROUTES.trainer.studentWorkoutBuilder, element: <WorkoutBuilderPage /> },
       { path: ROUTES.trainer.chat, element: <TrainerInboxPage /> },
+      { path: ROUTES.trainer.schedule, element: <TrainerSchedulePage /> },
       { path: ROUTES.trainer.account, element: <StudentAccountPage /> },
     ],
   },
