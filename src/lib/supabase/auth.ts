@@ -34,6 +34,16 @@ export async function signInAndFetchRole(email: string, password: string): Promi
   return { userId: signInData.user.id, role: (profile as { role: Role }).role }
 }
 
+/** Papel do usuário já logado (ex.: logo depois de criar a senha pelo convite). */
+export async function fetchCurrentRole(): Promise<Role | null> {
+  const supabase = getSupabase()
+  const { data } = await supabase.auth.getSession()
+  const userId = data.session?.user.id
+  if (!userId) return null
+  const { data: profile } = await supabase.from('profiles').select('role').eq('id', userId).maybeSingle()
+  return (profile as { role: Role } | null)?.role ?? null
+}
+
 /**
  * Entra com passkey (Face ID, Touch ID, Windows Hello ou chave de segurança). O navegador pede a
  * biometria e o Supabase cria a sessão. Depois resolve o papel igual ao login por senha.

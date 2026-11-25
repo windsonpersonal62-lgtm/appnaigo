@@ -39,9 +39,17 @@ type IntroGateProps = {
  * o excedente saía da tela, com a mesma aparência de um corte. Ancorar nas quatro bordas prende a
  * caixa ao tamanho da janela.
  */
+/**
+ * Links de e-mail (convite, nova senha) pulam a intro: quem chega por eles quer criar a senha, e
+ * 10 s de tela preta com logo antes do formulário pareciam travamento ("não consigo criar a conta").
+ */
+function shouldSkipIntro(): boolean {
+  return window.location.pathname.startsWith('/redefinir-senha') || window.location.pathname.startsWith('/esqueci-senha')
+}
+
 export function IntroGate({ children }: IntroGateProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
-  const [hasFinished, setHasFinished] = useState(false)
+  const [hasFinished, setHasFinished] = useState(shouldSkipIntro)
 
   useEffect(() => {
     if (hasFinished) return

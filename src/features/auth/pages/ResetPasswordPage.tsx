@@ -4,7 +4,8 @@ import { ROUTES } from '@/app/router/routes'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { getSupabase } from '@/lib/supabase/client'
-import { updatePassword } from '@/lib/supabase/auth'
+import { fetchCurrentRole, updatePassword } from '@/lib/supabase/auth'
+import { useRole } from '@/app/providers/useRole'
 
 const MIN_PASSWORD_LENGTH = 8
 
@@ -15,8 +16,12 @@ type Phase = 'checking' | 'ready' | 'invalid' | 'done'
  * sessão de recuperação; sem essa sessão a tela mostra "link inválido" em vez de um formulário
  * que não funcionaria.
  */
+/** O link de convite chega com `type=invite` no hash; o de recuperação, com `type=recovery`. */
+const isInvite = typeof window !== 'undefined' && /type=invite/.test(window.location.hash)
+
 export function ResetPasswordPage() {
   const navigate = useNavigate()
+  const { setRole } = useRole()
   const [phase, setPhase] = useState<Phase>('checking')
   const [password, setPassword] = useState('')
   const [confirmation, setConfirmation] = useState('')
@@ -52,7 +57,14 @@ export function ResetPasswordPage() {
     try {
       await updatePassword(password)
       setPhase('done')
-      navigate(ROUTES.login, { replace: true })
+      // A sessão do link continua válida: entra direto no app em vez de mandar logar de novo.
+      const role = await fetchCurrentRole()
+      if (role) {
+        setRole(role)
+        navigate(role === 'trainer' ? ROUTES.trainer.dashboard : ROUTES.student.home, { replace: true })
+      } else {
+        navigate(ROUTES.login, { replace: true })
+      }
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : 'Não foi possível trocar a senha.')
     } finally {
@@ -85,9 +97,9 @@ export function ResetPasswordPage() {
   return (
     <main className="flex flex-1 flex-col items-center justify-center gap-8 px-margin-mobile py-12 md:mx-auto md:w-full md:max-w-md">
       <header className="space-y-2 text-center">
-        <h1 className="font-display text-2xl font-bold uppercase text-text-primary">Nova senha</h1>
+        <h1 className="font-display text-2xl font-bold uppercase text-text-primary">{isInvite ? 'Crie sua senha' : 'Nova senha'}</h1>
         <p className="text-sm text-text-secondary">
-          Mínimo de {MIN_PASSWORD_LENGTH} caracteres.
+          {isInvite ? 'Bem-vindo! Escolha uma senha para entrar no app. ' : ''}Mínimo de {MIN_PASSWORD_LENGTH} caracteres.
         </p>
       </header>
 
@@ -114,7 +126,7 @@ export function ResetPasswordPage() {
           </p>
         )}
         <Button type="submit" disabled={submitting || phase === 'done'}>
-          {submitting ? 'Salvando…' : 'Salvar nova senha'}
+          {submitting ? 'Salvando…' : isInvite ? 'Criar senha e entrar' : 'Salvar nova senha'}
         </Button>
       </form>
     </main>
