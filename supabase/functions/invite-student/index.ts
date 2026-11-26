@@ -114,7 +114,12 @@ Deno.serve(async (req: Request) => {
 
   const { data: invited, error: inviteError } = await admin.auth.admin.inviteUserByEmail(
     payload.email,
-    { data: { full_name: payload.full_name } },
+    {
+      data: { full_name: payload.full_name },
+      // Sem redirectTo o link caía na raiz do site, que redireciona para /login e perdia o token do
+      // hash: o aluno nunca via a tela de criar senha. A URL precisa estar na allow list do Auth.
+      redirectTo: `${req.headers.get('origin') ?? Deno.env.get('SITE_URL') ?? 'https://windsonwoodpersonal.com.br'}/redefinir-senha`,
+    },
   )
   if (inviteError || !invited.user) {
     const message = inviteError?.message ?? 'Não foi possível convidar este aluno.'
