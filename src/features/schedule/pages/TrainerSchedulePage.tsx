@@ -8,7 +8,12 @@ import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { Icon } from '@/components/ui/Icon'
 import { Input } from '@/components/ui/Input'
-import { Select } from '@/components/ui/Select'
+import { BottomSheet } from '@astryxdesign/core/BottomSheet'
+import { DateInput } from '@astryxdesign/core/DateInput'
+import { TimeInput } from '@astryxdesign/core/TimeInput'
+import { Selector } from '@astryxdesign/core/Selector'
+import { TextArea } from '@astryxdesign/core/TextArea'
+import { Avatar } from '@astryxdesign/core/Avatar'
 import { useAsyncData } from '@/hooks/useAsyncData'
 import { useAuthUser } from '@/lib/supabase/useAuthUser'
 import { studentRepository } from '@/features/students/repositories/studentRepository'
@@ -211,13 +216,13 @@ export function TrainerSchedulePage() {
                     <p className="text-xs text-text-secondary">{formatTime(endTime(entry))}</p>
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-center justify-between gap-2">
-                      <p className="truncate font-medium text-text-primary">{entry.title}</p>
-                      <Badge tone={STATUS_TONE[entry.status]}>{STATUS_LABEL[entry.status]}</Badge>
+                    <div className="flex items-start justify-between gap-2">
+                      <p className="min-w-0 font-semibold leading-snug text-text-primary">{entry.title}</p>
+                      <span className="shrink-0"><Badge tone={STATUS_TONE[entry.status]}>{STATUS_LABEL[entry.status]}</Badge></span>
                     </div>
                     <p className="mt-1 flex flex-wrap gap-x-3 text-sm text-text-secondary">
                       {studentName(entry.studentId) && (
-                        <span className="inline-flex items-center gap-1"><Icon name="person" className="text-base" />{studentName(entry.studentId)}</span>
+                        <span className="inline-flex items-center gap-1.5"><Avatar name={studentName(entry.studentId)} size={20} tooltip={false} />{studentName(entry.studentId)}</span>
                       )}
                       {entry.location && (
                         <span className="inline-flex items-center gap-1"><Icon name="location_on" className="text-base" />{entry.location}</span>
@@ -231,71 +236,66 @@ export function TrainerSchedulePage() {
         </ol>
       )}
 
-      {form && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm md:items-center" role="dialog" aria-modal="true" aria-label={form.id ? 'Editar horário' : 'Novo horário'}>
-          <form onSubmit={handleSubmit} className="max-h-[92dvh] w-full max-w-lg overflow-y-auto rounded-t-2xl bg-surface-elevated p-6 shadow-glass md:rounded-2xl">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-display text-lg font-semibold">{form.id ? 'Editar horário' : 'Novo horário'}</h2>
-              <button type="button" aria-label="Fechar" onClick={() => setForm(null)} className="rounded-full p-2 hover:bg-surface-high">
-                <Icon name="close" />
-              </button>
-            </div>
-            <div className="flex flex-col gap-4">
-              <Input label="Título" placeholder="Ex.: Treino funcional" value={form.title} onChange={(e) => set({ title: e.target.value })} required maxLength={120} />
-              <Select
-                label="Aluno (opcional)"
-                value={form.studentId}
-                onChange={(e) => set({ studentId: e.target.value })}
-                options={[{ value: '', label: 'Sem aluno (compromisso pessoal)' }, ...(students ?? []).map((s) => ({ value: s.id, label: s.name }))]}
+      <BottomSheet
+        isOpen={form !== null}
+        onOpenChange={(open) => !open && setForm(null)}
+        label={form?.id ? 'Editar horário' : 'Novo horário'}
+        purpose="form"
+        height="tall"
+      >
+        {form && (
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4 px-1 pb-4">
+            <h2 className="font-display text-xl font-bold">{form.id ? 'Editar horário' : 'Novo horário'}</h2>
+            <Input label="Título" placeholder="Ex.: Treino funcional" value={form.title} onChange={(e) => set({ title: e.target.value })} required maxLength={120} />
+            <Selector
+              label="Aluno"
+              size="lg"
+              value={form.studentId || 'none'}
+              onChange={(v) => set({ studentId: !v || v === 'none' ? '' : v })}
+              hasSearch={(students?.length ?? 0) > 6}
+              searchPlaceholder="Buscar aluno…"
+              emptySearchText="Nenhum aluno encontrado"
+              options={[{ value: 'none', label: 'Sem aluno (compromisso pessoal)' }, ...(students ?? []).map((st) => ({ value: st.id, label: st.name }))]}
+            />
+            <DateInput label="Data" isRequired value={form.date as never} onChange={(v) => v && set({ date: v })} />
+            <div className="grid grid-cols-2 gap-3">
+              <TimeInput label="Hora" isRequired value={form.time as never} onChange={(v) => v && set({ time: v.slice(0, 5) })} />
+              <Selector
+                label="Duração"
+                size="lg"
+                value={form.durationMinutes}
+                onChange={(v) => v && set({ durationMinutes: v })}
+                options={['30', '45', '60', '90', '120'].map((m) => ({ value: m, label: `${m} min` }))}
               />
-              <div className="grid grid-cols-2 gap-3">
-                <Input label="Data" type="date" value={form.date} onChange={(e) => set({ date: e.target.value })} required />
-                <Input label="Hora" type="time" value={form.time} onChange={(e) => set({ time: e.target.value })} required />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <Select
-                  label="Duração"
-                  value={form.durationMinutes}
-                  onChange={(e) => set({ durationMinutes: e.target.value })}
-                  options={['30', '45', '60', '90', '120'].map((m) => ({ value: m, label: `${m} min` }))}
-                />
-                <Select
-                  label="Status"
-                  value={form.status}
-                  onChange={(e) => set({ status: e.target.value as ScheduleStatus })}
-                  options={(Object.keys(STATUS_LABEL) as ScheduleStatus[]).map((s) => ({ value: s, label: STATUS_LABEL[s] }))}
-                />
-              </div>
-              <Input label="Local" placeholder="Ex.: Academia, online, parque" value={form.location} onChange={(e) => set({ location: e.target.value })} />
-              <label className="flex flex-col gap-1 text-sm font-medium text-text-secondary">
-                Observações
-                <textarea
-                  rows={3}
-                  value={form.notes}
-                  onChange={(e) => set({ notes: e.target.value })}
-                  className="w-full rounded-md border border-border bg-surface px-3 py-2 font-body text-text-primary focus:border-action-primary focus:outline-none focus:ring-2 focus:ring-action-primary/20"
-                />
-              </label>
-              {conflict && form.status !== 'canceled' && (
-                <p role="status" className="flex items-center gap-2 rounded-md bg-warning/15 px-3 py-2 text-sm text-warning">
-                  <Icon name="warning" /> Conflita com “{conflict.title}” às {formatTime(conflict.startsAt)}.
-                </p>
-              )}
-              {formError && <p role="alert" className="text-sm text-error">{formError}</p>}
             </div>
-            <div className="mt-6 flex gap-3">
+            <Selector
+              label="Status"
+              size="lg"
+              value={form.status}
+              onChange={(v) => v && set({ status: v as ScheduleStatus })}
+              options={(Object.keys(STATUS_LABEL) as ScheduleStatus[]).map((st) => ({ value: st, label: STATUS_LABEL[st] }))}
+            />
+            <Input label="Local" placeholder="Ex.: Academia, online, parque" value={form.location} onChange={(e) => set({ location: e.target.value })} />
+            <TextArea label="Observações" isOptional value={form.notes} onChange={(v) => set({ notes: v })} placeholder="Algo para lembrar nesse horário" />
+            {conflict && form.status !== 'canceled' && (
+              <p role="status" className="flex items-center gap-2 rounded-xl bg-warning/15 px-3 py-2 text-sm text-warning">
+                <Icon name="warning" /> Conflita com “{conflict.title}” às {formatTime(conflict.startsAt)}.
+              </p>
+            )}
+            {formError && <p role="alert" className="text-sm text-error">{formError}</p>}
+            <div className="mt-2 flex gap-3">
               {form.id && (
-                <Button type="button" variant="ghost" onClick={handleDelete} disabled={saving} className="text-error">
+                <Button type="button" variant="destructive" onClick={handleDelete} disabled={saving}>
                   <Icon name="delete" /> Excluir
                 </Button>
               )}
-              <Button type="submit" disabled={saving} className="ml-auto">
-                {saving ? 'Salvando…' : 'Salvar'}
+              <Button type="submit" disabled={saving} fullWidth={!form.id} className={form.id ? 'flex-1' : ''}>
+                {saving ? 'Salvando…' : 'Salvar horário'}
               </Button>
             </div>
           </form>
-        </div>
-      )}
+        )}
+      </BottomSheet>
     </div>
   )
 }

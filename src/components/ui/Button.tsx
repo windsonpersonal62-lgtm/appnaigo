@@ -1,38 +1,52 @@
-import type { ButtonHTMLAttributes, ReactNode } from 'react'
+import { Children, isValidElement, type ButtonHTMLAttributes, type ReactNode } from 'react'
+import { Button as AxButton } from '@astryxdesign/core/Button'
+import { Icon } from './Icon'
 
-type ButtonVariant = 'primary' | 'secondary' | 'ghost'
+type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'destructive'
 
 type ButtonProps = {
   variant?: ButtonVariant
+  size?: 'sm' | 'md' | 'lg'
+  /** Ocupa a largura toda (formulários no celular). */
+  fullWidth?: boolean
   children: ReactNode
 } & ButtonHTMLAttributes<HTMLButtonElement>
 
-const VARIANT_CLASSES: Record<ButtonVariant, string> = {
-  primary:
-    'cta-gradient text-action-primary-foreground font-semibold hover:brightness-105',
-  secondary: 'glass border border-border/70 text-text-primary hover:bg-surface-high/70',
-  ghost: 'text-text-primary hover:bg-surface-high/60',
+function textOf(node: ReactNode): string {
+  return Children.toArray(node)
+    .map((child) => (typeof child === 'string' || typeof child === 'number' ? String(child) : isValidElement<{ children?: ReactNode }>(child) && child.type !== Icon ? textOf(child.props.children) : ''))
+    .join('')
+    .replace(/\s+/g, ' ')
+    .trim()
 }
 
 /**
- * O feedback de pressão acontece no pointer-down (`active:`), não no clique:
- * esperar o release para reagir faz o botão parecer morto. 110ms é curto o
- * bastante para o toque e a resposta serem lidos como o mesmo evento.
+ * Botão do app sobre o `Button` do Astryx (Meta), no tema preto e prata.
+ *
+ * A API antiga continua (filhos com `<Icon>` + texto, `disabled`, `className`), então nenhuma tela
+ * mudou: o primeiro `<Icon>` vira o ícone do Astryx e o resto vira o rótulo. `disabled` vira
+ * `isDisabled`, que o Astryx implementa com aria-disabled (o botão continua focável).
  */
-export function Button({
-  variant = 'primary',
-  className = '',
-  type = 'button',
-  children,
-  ...rest
-}: ButtonProps) {
+export function Button({ variant = 'primary', size = 'lg', fullWidth, children, disabled, type = 'button', className = '', onClick, ...rest }: ButtonProps) {
+  const parts = Children.toArray(children)
+  const iconEl = parts.find((child) => isValidElement(child) && child.type === Icon)
+  const rest_ = parts.filter((child) => child !== iconEl)
+  const label = textOf(rest_) || textOf(children) || (rest['aria-label'] ?? '')
+  const onlyText = rest_.every((child) => typeof child === 'string' || typeof child === 'number')
   return (
-    <button
+    <AxButton
+      {...(rest as Record<string, unknown>)}
+      label={label}
+      variant={variant}
+      size={size}
       type={type}
-      className={`inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-body text-sm font-medium transition-[transform,box-shadow,background-color,filter] duration-[110ms] ease-out-quint active:scale-[0.97] disabled:pointer-events-none disabled:opacity-50 ${VARIANT_CLASSES[variant]} ${className}`}
-      {...rest}
+      isDisabled={disabled}
+      icon={iconEl}
+      width={fullWidth ? '100%' : undefined}
+      className={className}
+      onClick={onClick as never}
     >
-      {children}
-    </button>
+      {onlyText ? undefined : rest_}
+    </AxButton>
   )
 }

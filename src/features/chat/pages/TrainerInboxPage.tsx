@@ -1,3 +1,4 @@
+import { Avatar } from '@astryxdesign/core/Avatar'
 import { useSearchParams } from 'react-router-dom'
 import {
   buildSessionHighlightPath,
@@ -37,10 +38,11 @@ function InboxRow({
             ? `${entry.studentName}, ${entry.unreadCount} não lidas`
             : `Conversa com ${entry.studentName}`
         }
-        className={`flex w-full items-start gap-3 border-b border-border px-3 py-3 text-left transition-colors ${
+        className={`flex w-full items-center gap-3 border-b border-border px-3 py-3 text-left transition-colors ${
           selected ? 'bg-surface-high' : 'hover:bg-surface-elevated'
         }`}
       >
+        <Avatar name={entry.studentName} size={48} tooltip={false} />
         <div className="min-w-0 flex-1">
           <div className="flex items-baseline justify-between gap-2">
             {/* Negrito marca a conversa com mensagem não lida — não só a bolinha vermelha. */}
@@ -51,7 +53,7 @@ function InboxRow({
             >
               {entry.studentName}
             </p>
-            <span className="shrink-0 font-mono text-[10px] text-text-secondary">
+            <span className="shrink-0 text-[11px] text-text-secondary">
               {formatInboxTime(entry.lastActivityAt)}
             </span>
           </div>
@@ -67,7 +69,7 @@ function InboxRow({
           <span
             // O número também vai no aria-label do botão: quem usa leitor de tela não vê a bolha.
             aria-hidden="true"
-            className="mt-1 flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-error px-1.5 font-mono text-[10px] font-bold leading-none text-white"
+            className="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-action-primary px-1.5 text-[11px] font-bold leading-none text-action-primary-foreground"
           >
             {entry.unreadCount > 99 ? '99+' : entry.unreadCount}
           </span>

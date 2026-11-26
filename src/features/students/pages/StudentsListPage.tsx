@@ -8,6 +8,7 @@ import { PageHeader } from '@/components/navigation/PageHeader'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { Icon } from '@/components/ui/Icon'
+import { Avatar } from '@astryxdesign/core/Avatar'
 import { useAsyncData } from '@/hooks/useAsyncData'
 import { useAuthUser } from '@/lib/supabase/useAuthUser'
 import { InviteStudentForm } from '../components/InviteStudentForm'
@@ -81,14 +82,18 @@ export function StudentsListPage() {
       )}
 
       {authStatus === 'authenticated' && status === 'ready' && students && students.length > 0 && (
-        <Card>
+        <Card className="px-4">
+          <p className="pt-4 text-xs font-semibold uppercase tracking-[0.14em] text-text-secondary">
+            {students.length} {students.length === 1 ? 'aluno' : 'alunos'}
+          </p>
           <ul className="divide-y divide-border">
             {students.map((student) => (
               <li key={student.id}>
                 <Link
                   to={buildStudentDetailPath(student.id)}
-                  className="flex items-center justify-between gap-4 py-4 transition-colors hover:text-action-primary"
+                  className="flex items-center justify-between gap-3 py-3.5 transition-colors hover:text-action-primary"
                 >
+                  <Avatar name={student.name} src={student.avatarUrl} size={48} tooltip={false} />
                   <div className="min-w-0 flex-1">
                     <p className="truncate font-bold text-text-primary">{student.name}</p>
                     <p className="truncate text-sm text-text-secondary">{student.email}</p>

@@ -1,7 +1,8 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { App } from './App'
+// globals.css PRIMEIRO: ele declara a ordem das camadas (@layer) antes de qualquer outro CSS.
 import './styles/globals.css'
+import { App } from './App'
 
 // Libera os ícones só quando a fonte local carregou (ver globals.css). Sem fonte, ficam invisíveis
 // em vez de mostrar o nome por extenso.

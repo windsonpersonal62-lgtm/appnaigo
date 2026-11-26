@@ -1,3 +1,5 @@
+import { lazy, Suspense, type ComponentType } from 'react'
+import { LoadingState } from '@/components/feedback/LoadingState'
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { AppShell } from '@/app/layouts/AppShell'
 import { StudentShell } from '@/app/layouts/StudentShell'
@@ -5,33 +7,47 @@ import { TrainerShell } from '@/app/layouts/TrainerShell'
 import { LoginPage } from '@/features/auth/pages/LoginPage'
 import { ForgotPasswordPage } from '@/features/auth/pages/ForgotPasswordPage'
 import { ResetPasswordPage } from '@/features/auth/pages/ResetPasswordPage'
-import { StudentAccountPage } from '@/features/auth/pages/StudentAccountPage'
-import { PersonalDashboardPage } from '@/features/dashboard/pages/PersonalDashboardPage'
-import { StudentHomePage } from '@/features/dashboard/pages/StudentHomePage'
-import { NewPhysicalAssessmentPage } from '@/features/assessments/physical/pages/NewPhysicalAssessmentPage'
-import { StudentAssessmentsPage } from '@/features/assessments/physical/pages/StudentAssessmentsPage'
-import { StudentMyAssessmentsPage } from '@/features/assessments/physical/pages/StudentMyAssessmentsPage'
-import { StudentAssessmentDetailPage } from '@/features/assessments/physical/pages/StudentAssessmentDetailPage'
-import { StudentAnamnesisListPage } from '@/features/anamnesis/pages/StudentAnamnesisListPage'
-import { TrainerAnamnesisPage } from '@/features/anamnesis/pages/TrainerAnamnesisPage'
-import {
-  StudentAnamnesisFillPage,
-  StudentMyAnamnesisPage,
-} from '@/features/anamnesis/pages/StudentMyAnamnesisPage'
-import { StudentsListPage } from '@/features/students/pages/StudentsListPage'
-import { StudentDetailPage } from '@/features/students/pages/StudentDetailPage'
-import { StudentWorkoutsPage } from '@/features/workouts/pages/StudentWorkoutsPage'
-import { WorkoutDetailPage } from '@/features/workouts/pages/WorkoutDetailPage'
-import { ExerciseDetailPage } from '@/features/workouts/pages/ExerciseDetailPage'
-import { PosturalCorrectionPage } from '@/features/workouts/pages/PosturalCorrectionPage'
-import { ExerciseLibraryPage } from '@/features/workouts/pages/ExerciseLibraryPage'
-import { WorkoutBuilderPage } from '@/features/workouts/pages/WorkoutBuilderPage'
-import { NutritionPlanPage } from '@/features/nutrition/pages/NutritionPlanPage'
-import { BillingPage } from '@/features/billing/pages/BillingPage'
-import { ChatPage } from '@/features/chat/pages/ChatPage'
-import { TrainerSchedulePage } from '@/features/schedule/pages/TrainerSchedulePage'
-import { TrainerInboxPage } from '@/features/chat/pages/TrainerInboxPage'
 import { ROUTES } from './routes'
+
+/**
+ * Cada tela (fora login/senha) vira um pedaço próprio do bundle, baixado só quando a pessoa abre a
+ * rota: o aluno não carrega o construtor de treino do personal, nem a avaliação postural (MediaPipe).
+ */
+function lazyPage<M, P extends object>(load: () => Promise<M>, pick: (module: M) => ComponentType<P>) {
+  const Page = lazy(() => load().then((module) => ({ default: pick(module) })))
+  return function LazyPage(props: P) {
+    return (
+      <Suspense fallback={<LoadingState />}>
+        <Page {...props} />
+      </Suspense>
+    )
+  }
+}
+
+const StudentAccountPage = lazyPage(() => import('@/features/auth/pages/StudentAccountPage'), (m) => m.StudentAccountPage)
+const PersonalDashboardPage = lazyPage(() => import('@/features/dashboard/pages/PersonalDashboardPage'), (m) => m.PersonalDashboardPage)
+const StudentHomePage = lazyPage(() => import('@/features/dashboard/pages/StudentHomePage'), (m) => m.StudentHomePage)
+const NewPhysicalAssessmentPage = lazyPage(() => import('@/features/assessments/physical/pages/NewPhysicalAssessmentPage'), (m) => m.NewPhysicalAssessmentPage)
+const StudentAssessmentsPage = lazyPage(() => import('@/features/assessments/physical/pages/StudentAssessmentsPage'), (m) => m.StudentAssessmentsPage)
+const StudentMyAssessmentsPage = lazyPage(() => import('@/features/assessments/physical/pages/StudentMyAssessmentsPage'), (m) => m.StudentMyAssessmentsPage)
+const StudentAssessmentDetailPage = lazyPage(() => import('@/features/assessments/physical/pages/StudentAssessmentDetailPage'), (m) => m.StudentAssessmentDetailPage)
+const StudentAnamnesisListPage = lazyPage(() => import('@/features/anamnesis/pages/StudentAnamnesisListPage'), (m) => m.StudentAnamnesisListPage)
+const TrainerAnamnesisPage = lazyPage(() => import('@/features/anamnesis/pages/TrainerAnamnesisPage'), (m) => m.TrainerAnamnesisPage)
+const StudentAnamnesisFillPage = lazyPage(() => import('@/features/anamnesis/pages/StudentMyAnamnesisPage'), (m) => m.StudentAnamnesisFillPage)
+const StudentMyAnamnesisPage = lazyPage(() => import('@/features/anamnesis/pages/StudentMyAnamnesisPage'), (m) => m.StudentMyAnamnesisPage)
+const StudentsListPage = lazyPage(() => import('@/features/students/pages/StudentsListPage'), (m) => m.StudentsListPage)
+const StudentDetailPage = lazyPage(() => import('@/features/students/pages/StudentDetailPage'), (m) => m.StudentDetailPage)
+const StudentWorkoutsPage = lazyPage(() => import('@/features/workouts/pages/StudentWorkoutsPage'), (m) => m.StudentWorkoutsPage)
+const WorkoutDetailPage = lazyPage(() => import('@/features/workouts/pages/WorkoutDetailPage'), (m) => m.WorkoutDetailPage)
+const ExerciseDetailPage = lazyPage(() => import('@/features/workouts/pages/ExerciseDetailPage'), (m) => m.ExerciseDetailPage)
+const PosturalCorrectionPage = lazyPage(() => import('@/features/workouts/pages/PosturalCorrectionPage'), (m) => m.PosturalCorrectionPage)
+const ExerciseLibraryPage = lazyPage(() => import('@/features/workouts/pages/ExerciseLibraryPage'), (m) => m.ExerciseLibraryPage)
+const WorkoutBuilderPage = lazyPage(() => import('@/features/workouts/pages/WorkoutBuilderPage'), (m) => m.WorkoutBuilderPage)
+const NutritionPlanPage = lazyPage(() => import('@/features/nutrition/pages/NutritionPlanPage'), (m) => m.NutritionPlanPage)
+const BillingPage = lazyPage(() => import('@/features/billing/pages/BillingPage'), (m) => m.BillingPage)
+const ChatPage = lazyPage(() => import('@/features/chat/pages/ChatPage'), (m) => m.ChatPage)
+const TrainerSchedulePage = lazyPage(() => import('@/features/schedule/pages/TrainerSchedulePage'), (m) => m.TrainerSchedulePage)
+const TrainerInboxPage = lazyPage(() => import('@/features/chat/pages/TrainerInboxPage'), (m) => m.TrainerInboxPage)
 
 export const router = createBrowserRouter([
   { path: '/', element: <Navigate to={ROUTES.login} replace /> },
