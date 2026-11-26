@@ -21,11 +21,17 @@ describe('tradução dos passos de execução', () => {
   })
 
   it('mantém o inglês quando algum passo não tem tradução', () => {
-    const untranslated = catalog.exercises.filter(
-      (exercise) => exercise.stepsLanguage !== TRANSLATED_STEPS_LANGUAGE,
-    )
-    expect(untranslated.length).toBeGreaterThan(0)
-    expect(untranslated[0].stepsLanguage).toBe(raw.sourceLanguage)
+    // O dicionário hoje cobre 100% do catálogo; tira um passo para provar a regra do tudo ou nada.
+    const [firstStep] = raw.exercises[0].steps
+    const { [firstStep]: _removido, ...incompleto } = translations
+    void _removido
+    const parcial = toExerciseCatalog(raw, incompleto)
+    const afetado = parcial.exercises.find((exercise) => exercise.id === raw.exercises[0].id)
+    expect(afetado?.stepsLanguage).toBe(raw.sourceLanguage)
+  })
+
+  it('cobre todos os exercícios do catálogo', () => {
+    expect(catalog.translatedStepsCount).toBe(raw.exercises.length)
   })
 
   it('preserva a quantidade de passos ao traduzir', () => {

@@ -62,6 +62,9 @@ export interface Exercise {
 /** Mapa passo em inglês → passo em pt-BR (`public/data/instructions.pt-BR.json`). */
 export type InstructionTranslations = Record<string, string>
 
+/** Mapa nome em inglês → nome revisado em pt-BR (`public/data/names.pt-BR.json`). */
+export type NameTranslations = Record<string, string>
+
 export interface ExerciseCatalog {
   exercises: Exercise[]
   /** Quantos exercícios têm os passos de execução em português. */

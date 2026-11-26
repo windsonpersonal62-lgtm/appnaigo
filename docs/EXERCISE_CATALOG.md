@@ -53,6 +53,17 @@ independente do JS.
 
 ## Tradução para pt-BR
 
+### Atualização 2026-11-26: catálogo 100% em pt-BR
+
+- `public/data/instructions.pt-BR.json` cobre **todos** os 4.414 passos: os 1.324 exercícios têm
+  instruções em português (antes, 73). A regra do tudo ou nada continua no código e no teste.
+- `public/data/names.pt-BR.json` (novo): nome revisado de cada um dos 1.318 nomes distintos, no
+  jeito de ficha de treino brasileira. Tem prioridade sobre as regras de `exerciseNaming.ts`, que
+  ficam de reserva para exercício novo. Nomes diferentes em inglês nunca colidem em português
+  (teste em `nameTranslation.test.ts`); variações quase idênticas levam "(v. 2)".
+- Tradução feita por modelo de linguagem com glossário fixo de academia e validação por código
+  (sem chave faltando, sem valor vazio, sem palavra em inglês). Revisão humana: pendente.
+
 O dataset traz instruções em 10 idiomas (`en, es, it, tr, ru, zh, hi, pl, ko, fr`) — **nenhum
 deles é português**. A tradução acontece no app, em `src/features/workouts/domain/`, e não no
 arquivo de dados, para ser coberta por testes e evoluir sem reprocessar o dataset.

@@ -9,11 +9,13 @@ import { toExerciseCatalog } from '../domain/exerciseCatalog'
 import type {
   ExerciseCatalog,
   InstructionTranslations,
+  NameTranslations,
   RawExerciseCatalog,
 } from '../domain/exercise.types'
 
 const CATALOG_URL = '/data/exercises.json'
 const TRANSLATIONS_URL = '/data/instructions.pt-BR.json'
+const NAMES_URL = '/data/names.pt-BR.json'
 
 let cachedRequest: Promise<ExerciseCatalog> | null = null
 
@@ -22,9 +24,9 @@ let cachedRequest: Promise<ExerciseCatalog> | null = null
  * assim com os passos no idioma de origem. Uma tradução ausente não pode derrubar a biblioteca
  * inteira de exercícios.
  */
-async function fetchTranslations(): Promise<InstructionTranslations> {
+async function fetchTranslations(url: string = TRANSLATIONS_URL): Promise<InstructionTranslations> {
   try {
-    const response = await fetch(TRANSLATIONS_URL)
+    const response = await fetch(url)
     if (!response.ok) return {}
     const data: unknown = await response.json()
     return typeof data === 'object' && data !== null ? (data as InstructionTranslations) : {}
@@ -35,7 +37,11 @@ async function fetchTranslations(): Promise<InstructionTranslations> {
 
 async function fetchCatalog(): Promise<ExerciseCatalog> {
   // Em paralelo: os dois arquivos são independentes e somam ~1 MB.
-  const [response, translations] = await Promise.all([fetch(CATALOG_URL), fetchTranslations()])
+  const [response, translations, names] = await Promise.all([
+    fetch(CATALOG_URL),
+    fetchTranslations(),
+    fetchTranslations(NAMES_URL) as Promise<NameTranslations>,
+  ])
 
   if (!response.ok) {
     throw new Error(`Falha ao carregar o catálogo de exercícios (HTTP ${response.status}).`)
@@ -46,7 +52,7 @@ async function fetchCatalog(): Promise<ExerciseCatalog> {
     throw new Error('Catálogo de exercícios vazio ou em formato inesperado.')
   }
 
-  return toExerciseCatalog(raw, translations)
+  return toExerciseCatalog(raw, translations, names)
 }
 
 export function loadExerciseCatalog(): Promise<ExerciseCatalog> {

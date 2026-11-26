@@ -9,6 +9,7 @@ import type {
   ExerciseCatalog,
   ExerciseFilters,
   InstructionTranslations,
+  NameTranslations,
   RawExercise,
   RawExerciseCatalog,
 } from './exercise.types'
@@ -65,8 +66,12 @@ function toExercise(
   raw: RawExercise,
   sourceLanguage: string,
   translations: InstructionTranslations,
+  names: NameTranslations,
 ): Exercise {
-  const translatedName = translateExerciseName(raw.name)
+  // Nome revisado (dicionário) tem prioridade; as regras de exerciseNaming ficam de reserva para
+  // exercício novo que ainda não entrou no dicionário.
+  const reviewedName = names[raw.name]
+  const translatedName = reviewedName ? { value: reviewedName, isTranslated: true } : translateExerciseName(raw.name)
   const bodyPart = translateBodyPart(raw.bodyPart)
   const equipment = translateEquipment(raw.equipment)
   const target = translateMuscle(raw.target)
@@ -113,9 +118,10 @@ function toExercise(
 export function toExerciseCatalog(
   raw: RawExerciseCatalog,
   translations: InstructionTranslations = {},
+  names: NameTranslations = {},
 ): ExerciseCatalog {
   const exercises = raw.exercises
-    .map((item) => toExercise(item, raw.sourceLanguage, translations))
+    .map((item) => toExercise(item, raw.sourceLanguage, translations, names))
     .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'))
 
   return {
