@@ -9,6 +9,14 @@
   src: url('/fonts/material-symbols-outlined.woff2') format('woff2');
 }
 
+/* Tamanho padrão dos ícones (24px), como fazia a folha do Google Fonts. Fica em `base` para que
+ * classes de tamanho (text-base, text-4xl...) continuem valendo por cima. */
+@layer base {
+  .material-symbols-outlined {
+    font-size: 24px;
+  }
+}
+
 /* Até a fonte de ícones confirmar que carregou (main.tsx marca <html class="icons-ready">), o
  * texto da ligadura fica transparente: nunca aparece "chevron_left" pela metade na tela. */
 html:not(.icons-ready) .material-symbols-outlined {
