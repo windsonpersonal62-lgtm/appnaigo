@@ -1,0 +1,85 @@
+{
+  "name": "windson",
+  "like": "neutral",
+  "mode": "dark-only",
+  "settings": [
+    {
+      "thing": "accent",
+      "value": "#d4d7dc",
+      "source": "dial"
+    },
+    {
+      "thing": "neutral",
+      "value": "#8e9096",
+      "source": "dial"
+    },
+    {
+      "thing": "corners",
+      "value": "round",
+      "source": "dial"
+    },
+    {
+      "thing": "success",
+      "value": "#30d158",
+      "source": "dial"
+    },
+    {
+      "thing": "warning",
+      "value": "#ffd60a",
+      "source": "dial"
+    },
+    {
+      "thing": "danger",
+      "value": "#ff6961",
+      "source": "dial"
+    },
+    {
+      "thing": "info",
+      "value": "#64d2ff",
+      "source": "dial"
+    },
+    {
+      "thing": "--color-background-body",
+      "value": "#000000",
+      "source": "token",
+      "mode": "dark"
+    },
+    {
+      "thing": "--color-background-surface",
+      "value": "#1c1c1e",
+      "source": "token",
+      "mode": "dark"
+    },
+    {
+      "thing": "--color-background-card",
+      "value": "#1c1c1e",
+      "source": "token",
+      "mode": "dark"
+    },
+    {
+      "thing": "--color-text-primary",
+      "value": "#f5f5f7",
+      "source": "token",
+      "mode": "dark"
+    },
+    {
+      "thing": "--color-text-secondary",
+      "value": "#a1a1a6",
+      "source": "token",
+      "mode": "dark"
+    },
+    {
+      "thing": "--color-border",
+      "value": "#3a3a3c",
+      "source": "token",
+      "mode": "dark"
+    },
+    {
+      "thing": "font",
+      "value": "system",
+      "source": "dial"
+    }
+  ],
+  "lifted": [],
+  "palette": "7a5f86d2fa5a86b17a9d29b437a9ba59777b7fd97c4c8e71c3975b65ebdb6bb1"
+}

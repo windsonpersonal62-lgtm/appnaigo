@@ -1,4 +1,12 @@
+/* Ordem das camadas ANTES do Tailwind (ver `npm run astryx -- docs styling-libraries/tailwind`):
+ * abaixo do import ela inverteria a cascata e o reset do Astryx apagaria os utilitários do app. */
+@layer reset, theme, base, astryx-base, astryx-theme, components, utilities;
+
 @import 'tailwindcss';
+@import '@astryxdesign/core/reset.css';
+@import '@astryxdesign/core/astryx.css';
+/* O tema "windson" (preto e prata) entra por src/astryx-themes.ts, gerado pelo `astryx theme add`.
+ * Tokens do app com o mesmo nome dos do Astryx usam os mesmos valores (ver themes/windson). */
 @import './tokens.css';
 
 @font-face {

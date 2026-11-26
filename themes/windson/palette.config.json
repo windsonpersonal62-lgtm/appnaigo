@@ -1,0 +1,122 @@
+{
+  "recipe": "astryx-oklch-v2",
+  "modeStrategy": "light-and-dark",
+  "families": [
+    {
+      "id": "accent",
+      "name": "Accent",
+      "seed": "#d4d7dc",
+      "kind": "neutral",
+      "anchors": [
+        {
+          "mode": "light",
+          "stop": 85,
+          "color": "#d4d7dc",
+          "policy": "exact"
+        },
+        {
+          "mode": "dark",
+          "stop": 85,
+          "color": "#d4d7dc",
+          "policy": "exact"
+        }
+      ]
+    },
+    {
+      "id": "neutral",
+      "name": "Neutral",
+      "seed": "#8e9096",
+      "kind": "neutral",
+      "anchors": [
+        {
+          "mode": "light",
+          "stop": 60,
+          "color": "#8e9096",
+          "policy": "exact"
+        },
+        {
+          "mode": "dark",
+          "stop": 60,
+          "color": "#8e9096",
+          "policy": "exact"
+        }
+      ]
+    },
+    {
+      "id": "success",
+      "name": "Success",
+      "seed": "#30d158",
+      "anchors": [
+        {
+          "mode": "light",
+          "stop": 70,
+          "color": "#30d158",
+          "policy": "exact"
+        },
+        {
+          "mode": "dark",
+          "stop": 70,
+          "color": "#30d158",
+          "policy": "exact"
+        }
+      ]
+    },
+    {
+      "id": "warning",
+      "name": "Warning",
+      "seed": "#ffd60a",
+      "anchors": [
+        {
+          "mode": "light",
+          "stop": 85,
+          "color": "#ffd60a",
+          "policy": "exact"
+        },
+        {
+          "mode": "dark",
+          "stop": 85,
+          "color": "#ffd60a",
+          "policy": "exact"
+        }
+      ]
+    },
+    {
+      "id": "danger",
+      "name": "Danger",
+      "seed": "#ff6961",
+      "anchors": [
+        {
+          "mode": "light",
+          "stop": 65,
+          "color": "#ff6961",
+          "policy": "exact"
+        },
+        {
+          "mode": "dark",
+          "stop": 65,
+          "color": "#ff6961",
+          "policy": "exact"
+        }
+      ]
+    },
+    {
+      "id": "info",
+      "name": "Info",
+      "seed": "#64d2ff",
+      "anchors": [
+        {
+          "mode": "light",
+          "stop": 80,
+          "color": "#64d2ff",
+          "policy": "exact"
+        },
+        {
+          "mode": "dark",
+          "stop": 80,
+          "color": "#64d2ff",
+          "policy": "exact"
+        }
+      ]
+    }
+  ]
+}
