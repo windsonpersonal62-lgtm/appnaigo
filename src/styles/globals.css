@@ -17,6 +17,22 @@
   src: url('/fonts/material-symbols-outlined.woff2') format('woff2');
 }
 
+/* O reset do tema Astryx dá cor/tamanho fixos a <p>, <small> e títulos dentro do <Theme>. As telas
+ * do app foram feitas herdando do pai (ex.: texto escuro dentro da bolha prata do chat), então aqui,
+ * na camada `base` (acima de `reset`), eles voltam a herdar. Componentes Astryx não são afetados:
+ * o estilo deles mora em `astryx-base`, acima desta camada. */
+@layer base {
+  :where(p, small, h1, h2, h3, h4, h5, h6) {
+    color: inherit;
+    font-family: inherit;
+  }
+  :where(p, small) {
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+  }
+}
+
 /* Tamanho padrão dos ícones (24px), como fazia a folha do Google Fonts. Fica em `base` para que
  * classes de tamanho (text-base, text-4xl...) continuem valendo por cima. */
 @layer base {

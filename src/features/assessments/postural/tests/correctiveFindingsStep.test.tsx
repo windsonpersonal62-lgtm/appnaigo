@@ -159,7 +159,7 @@ describe('CorrectiveFindingsStep', () => {
       const suggestion = buildSuggestion('head_forward', [])
       renderStep({ suggestions: [suggestion] })
 
-      expect(screen.getByRole('button', { name: /publicar plano corretivo/i })).toBeDisabled()
+      expect(screen.getByRole('button', { name: /publicar plano corretivo/i })).toHaveAttribute('aria-disabled', 'true') // Astryx: aria-disabled, botão continua focável
     })
 
     it('não oferece publicação enquanto as sugestões ainda carregam', () => {
@@ -174,7 +174,7 @@ describe('CorrectiveFindingsStep', () => {
         publishStatus: 'saving',
       })
 
-      expect(screen.getByRole('button', { name: /publicando/i })).toBeDisabled()
+      expect(screen.getByRole('button', { name: /publicando/i })).toHaveAttribute('aria-disabled', 'true')
     })
 
     it('só confirma a publicação quando o status é success', () => {

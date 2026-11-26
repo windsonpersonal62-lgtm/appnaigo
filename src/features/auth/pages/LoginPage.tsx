@@ -110,10 +110,9 @@ export function LoginPage() {
       </form>
 
       <footer className="w-full px-8 text-center">
-        <p className="text-[10px] uppercase leading-relaxed text-text-secondary/70">
-          Login conectado ao Supabase — Google, Apple e recuperação de senha ainda não
-          implementados (Fase 7 completa, ver docs/ROADMAP.md).
-        </p>
+        {/* Antes havia aqui uma nota técnica de desenvolvimento ("Supabase", "ROADMAP.md") visível
+            para alunos. Agora só o endereço do app. */}
+        <p className="text-xs tracking-wide text-text-secondary/70">windsonwoodpersonal.com.br</p>
       </footer>
     </main>
   )

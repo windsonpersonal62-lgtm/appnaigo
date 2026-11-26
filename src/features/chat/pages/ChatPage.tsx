@@ -144,15 +144,16 @@ export function ChatPage({
                 className={`flex min-w-0 max-w-[85%] flex-col ${isSelf ? 'self-end items-end' : 'items-start'}`}
               >
                 {!isSelf && (
-                  <span className="mb-1 ml-1 font-mono text-[10px] text-action-primary">
-                    {counterpartName.toUpperCase()}
+                  <span className="mb-1 ml-3 text-xs font-semibold text-text-secondary">
+                    {counterpartName}
                   </span>
                 )}
                 <div
-                  className={`rounded-tl-xl rounded-br-xl rounded-bl-xl border p-3 ${
+                  // Bolhas estilo iMessage: as minhas em prata (texto escuro), as do outro em grafite.
+                  className={`rounded-[20px] px-4 py-2.5 text-[15px] leading-snug ${
                     isSelf
-                      ? 'border-action-primary/20 bg-action-primary/20 text-text-primary'
-                      : 'border-border bg-surface-elevated text-text-primary'
+                      ? 'rounded-br-md bg-action-primary text-action-primary-foreground'
+                      : 'rounded-bl-md bg-surface-high text-text-primary'
                   } ${message.pending ? 'opacity-60' : ''}`}
                 >
                   {/*
@@ -164,18 +165,18 @@ export function ChatPage({
                     (() => {
                       const href = contextHref?.(message) ?? null
                       const className =
-                        'mb-2 flex items-center gap-1 border-l-2 border-action-primary/60 bg-surface-high/50 py-1 pl-2 font-mono text-[10px] uppercase tracking-wide'
+                        'mb-2 flex items-center gap-1 rounded-md border-l-2 border-current/40 bg-black/10 py-1 pl-2 pr-2 text-[11px] font-semibold uppercase tracking-wide'
                       // Com destino o rótulo é LINK: é como o personal volta à execução que gerou
                       // a dúvida. Sem destino segue texto — link que não leva a nada é pior que
                       // texto.
                       return href === null ? (
-                        <p className={`${className} text-text-secondary`}>
+                        <p className={`${className} opacity-80`}>
                           {message.context.label}
                         </p>
                       ) : (
                         <Link
                           to={href}
-                          className={`${className} text-action-primary hover:underline`}
+                          className={`${className} underline-offset-2 hover:underline`}
                         >
                           {message.context.label}
                           <Icon name="open_in_new" className="text-xs" />
@@ -188,7 +189,7 @@ export function ChatPage({
                       tarde demais). Mensagem pode conter link/token longo sem espaço. */}
                   <p className="[overflow-wrap:anywhere]">{message.body}</p>
                 </div>
-                <span className="mt-1 ml-1 font-mono text-[10px] text-text-secondary">
+                <span className="mt-1 mx-3 text-[11px] text-text-secondary">
                   {message.pending ? 'enviando…' : formatMessageTime(message.createdAt)}
                 </span>
               </div>
@@ -203,8 +204,8 @@ export function ChatPage({
         </p>
       )}
 
-      <div className="flex items-center gap-3 border-t border-border bg-surface p-gutter">
-        <div className="relative flex-1 border-b border-border focus-within:border-action-primary">
+      <div className="flex items-center gap-2 py-3">
+        <div className="relative flex-1 rounded-full border border-border bg-surface px-3 focus-within:border-action-primary focus-within:ring-2 focus-within:ring-action-primary/25">
           <input
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
@@ -217,7 +218,7 @@ export function ChatPage({
             // ao focar e a tela fica deslocada. `enterKeyHint` troca o Enter do teclado por
             // "enviar" — e o envio tem botão próprio, porque teclado mobile nem sempre tem Enter
             // visível.
-            className="w-full bg-transparent px-2 py-3 text-base text-text-primary placeholder:text-text-secondary/50 focus:outline-none"
+            className="w-full bg-transparent px-2 py-2.5 text-base text-text-primary placeholder:text-text-secondary/60 focus:outline-none"
             enterKeyHint="send"
             autoComplete="off"
           />
@@ -227,7 +228,7 @@ export function ChatPage({
           onClick={handleSend}
           disabled={chat.sending}
           aria-label="Enviar mensagem"
-          className="flex h-10 w-10 items-center justify-center rounded-lg bg-action-primary text-action-primary-foreground active:scale-95 disabled:opacity-50"
+          className="cta-gradient flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-action-primary-foreground transition-transform active:scale-90 disabled:opacity-50"
         >
           <Icon name="send" />
         </button>
