@@ -1,7 +1,38 @@
 @import 'tailwindcss';
 @import './tokens.css';
 
+@font-face {
+  font-family: 'Material Symbols Outlined';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('/fonts/material-symbols-outlined.woff2') format('woff2');
+}
+
+/* Até a fonte de ícones confirmar que carregou (main.tsx marca <html class="icons-ready">), o
+ * texto da ligadura fica transparente: nunca aparece "chevron_left" pela metade na tela. */
+html:not(.icons-ready) .material-symbols-outlined {
+  color: transparent !important;
+}
+
+/*
+ * Mesmo que a fonte falhe, o nome do ícone nunca aparece por extenso: a caixa tem 1em de largura
+ * e esconde o excesso. Sem isso, "switch_account" vazava por cima do layout.
+ */
 .material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  width: 1em;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'liga';
   font-variation-settings:
     'FILL' 0,
     'wght' 400,
